@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:webapp/Pages/TodoList.dart';
 import 'package:webapp/sqlite/DatabaseHelper.dart';
 
 void main() => runApp(MyApp());
@@ -65,6 +66,12 @@ class _MyHomePageState extends State<MyHomePage> {
     print('print the id here $id');
 
     _query();
+
+    // Route to next page.
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TodoList()),
+      );
   }
 
   void _query() async {
