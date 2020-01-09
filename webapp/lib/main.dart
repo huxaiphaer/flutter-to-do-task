@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+import 'package:webapp/sqlite/DatabaseHelper.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Todo application'),
     );
   }
 }
@@ -44,17 +46,31 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  // reference to our single class that manages the database
+  final dbHelper = DatabaseHelper.instance;
+  final titleController = TextEditingController();
+  final contentController = TextEditingController();
+
+
+  void _saveData() async{
+
+    Map<String, dynamic> row = {
+      DatabaseHelper.columnTitle: titleController.text,
+      DatabaseHelper.columnContent: contentController.text,
+    };
+
+    final id = await dbHelper.insert(row);
+
+    print('print the id here $id');
+
+    _query();
+  }
+
+  void _query() async {
+    final allRows = await dbHelper.queryAllRows();
+    print('query all rows:');
+    allRows.forEach((row) => print(row));
   }
 
   @override
@@ -71,9 +87,10 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
+      body: Container(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
+        margin: new EdgeInsets.all(20.0),
         child: Column(
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
@@ -91,19 +108,24 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+            TextFormField(
+              decoration: const InputDecoration(
+                hintText: 'Enter Title'
+              ),
+              controller: titleController,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
+            TextFormField(
+              decoration: const InputDecoration(
+                  hintText: 'Enter Content'
+              ),
+              controller: contentController,
+            )
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: _saveData,
+        tooltip: 'Add a To-do',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
