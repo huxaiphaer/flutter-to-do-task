@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:webapp/Pages/TodoList.dart';
+import 'package:webapp/Pages/todoList.dart';
 import 'package:webapp/sqlite/DatabaseHelper.dart';
 
 void main() => runApp(MyApp());
@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
         primarySwatch: Colors.blue,
+
       ),
       home: MyHomePage(title: 'Todo application'),
     );
@@ -68,10 +70,16 @@ class _MyHomePageState extends State<MyHomePage> {
     _query();
 
     // Route to next page.
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => TodoList()),
-      );
+
+    routeToTodoListPage();
+
+  }
+
+  void routeToTodoListPage(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TodoList()),
+    );
   }
 
   void _query() async {

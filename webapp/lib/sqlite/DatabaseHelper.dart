@@ -66,7 +66,4 @@ class DatabaseHelper{
     return await db.query(table);
   }
 
-
-
-
 }
